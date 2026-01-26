@@ -8,13 +8,17 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">z
     <title>YADIKA 6 TRASH FILTRATION SYSTEM</title>
   </head>
   <body>
     <div class="container">
       <div class="sidebar-left">
         <div class="card">
-          <h3>ORGANIK</h3>
+          <div class="card-header">
+            <img src="../img/ORGANIC.png" alt="Organic" class="category-icon" />
+            <h3>ORGANIK</h3>
+          </div>
           <div class="bar-bg">
             <div
               id="bar-organik"
@@ -24,7 +28,14 @@
           </div>
         </div>
         <div class="card">
-          <h3>ANORGANIK</h3>
+          <div class="card-header">
+            <img
+              src="../img/INORGANIC.png"
+              alt="Inorganic"
+              class="category-icon"
+            />
+            <h3>ANORGANIK</h3>
+          </div>
           <div class="bar-bg">
             <div
               id="bar-anorganik"
@@ -34,13 +45,12 @@
           </div>
         </div>
         <div class="card">
-          <h3>B3</h3>
+          <div class="card-header">
+            <img src="../img/HAZARD.png" alt="Hazard" class="category-icon" />
+            <h3>B3</h3>
+          </div>
           <div class="bar-bg">
-            <div
-              id="bar-b3"
-              class="bar-fill"
-              style="background: #f44336"
-            ></div>
+            <div id="bar-b3" class="bar-fill" style="background: #f44336"></div>
           </div>
         </div>
       </div>
@@ -65,5 +75,6 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
   <script src="TM/teachablemachine.js" type="text/javascript"></script>
 </html>

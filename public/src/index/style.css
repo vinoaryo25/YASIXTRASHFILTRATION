@@ -43,7 +43,7 @@ body {
 
 /* Left Sidebar: Classification Bars */
 .sidebar-left {
-  width: 250px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -128,6 +128,10 @@ canvas {
   background-color: var(--bg-color);
   padding: 5px;
   border-radius: 12px;
+}
+
+.category-icon {
+  width: 50%;
 }
 
 /* Bottom Social Bar */
