@@ -46,10 +46,10 @@ app.post("/predict", (req, res) => {
       port.write("A");
       break;
     case "anorganik":
-      port.write("A");
+      port.write("B");
       break;
     case "b3":
-      port.write("A");
+      port.write("C");
       break;
   }
 
