@@ -21,6 +21,8 @@
   "homepage": "https://github.com/vinoaryo25/YASIXTRASHFILTRATION#readme",
   "dependencies": {
     "ejs": "^4.0.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "parser-readline": "^1.0.1",
+    "serialport": "^13.0.0"
   }
 }
