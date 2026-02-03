@@ -1,10 +1,10 @@
 const URL = "https://teachablemachine.withgoogle.com/models/WzCktHjXW/";
 
 let model, webcam, maxPredictions;
-const PREDICTION_TIME = 1500; // Miliseccond
+const PREDICTION_TIME = 1500; // Milliseconds
 const THRESHOLD = 75;
 
-var audio = new Audio("../audio/success.mp3");
+var audio = new Audio("../audio/success.wav");
 
 const notyf = new Notyf({
   duration: 2500,
@@ -15,8 +15,11 @@ const notyf = new Notyf({
 });
 
 async function init() {
-  // Hide the start button after click
-  document.querySelector(".start-btn").style.display = "none";
+  // Hide the start screen
+  const startScreen = document.querySelector(".start-screen");
+  if (startScreen) {
+    startScreen.style.display = "none";
+  }
 
   const modelURL = URL + "model.json";
   const metadataURL = URL + "metadata.json";
@@ -25,12 +28,16 @@ async function init() {
   maxPredictions = model.getTotalClasses();
 
   const flip = true;
-  webcam = new tmImage.Webcam(500, 500, flip);
+  webcam = new tmImage.Webcam(600, 600, flip);
   await webcam.setup();
   await webcam.play();
   window.requestAnimationFrame(loop);
 
-  document.getElementById("webcam-container").appendChild(webcam.canvas);
+  const container = document.getElementById("webcam-container");
+  container.appendChild(webcam.canvas);
+
+  // Ensure canvas is visible
+  webcam.canvas.style.display = "block";
 }
 
 async function loop() {
@@ -51,14 +58,20 @@ async function predict() {
 
     // Update the bar
     let bar = document.getElementById(`bar-${className}`);
+    let confidenceDisplay = document.getElementById(`confidence-${className}`);
 
     if (bar) {
       bar.style.width = probability + "%";
+
+      // Update confidence display
+      if (confidenceDisplay) {
+        confidenceDisplay.textContent = probability + "%";
+      }
     } else {
       console.warn(`No HTML bar found for class: bar-${className}`);
     }
 
-    // Check if probability is above 85%
+    // Check if probability is above threshold
     if (probability > THRESHOLD) {
       // If this is the first time above threshold, start tracking
       if (!thresholdTracking[className]) {
@@ -68,7 +81,7 @@ async function predict() {
         };
       }
 
-      // Check if it's been above threshold for 3 seconds
+      // Check if it's been above threshold for the specified time
       const timeAboveThreshold =
         currentTime - thresholdTracking[className].startTime;
 
@@ -77,10 +90,6 @@ async function predict() {
         !thresholdTracking[className].triggered
       ) {
         // Trigger the action (only once)
-        // console.log(
-        //   `🎯 ACTION TRIGGERED for ${className}! Probability: ${probability}%`,
-        // );
-
         audio.play();
 
         predictionData = {
@@ -89,22 +98,51 @@ async function predict() {
         };
 
         fetch("/predict", {
-          method: "POST", // Specify the method
+          method: "POST",
           headers: {
-            "Content-Type": "application/json; charset=UTF-8", // Indicate the content type
+            "Content-Type": "application/json; charset=UTF-8",
           },
-          body: JSON.stringify(predictionData), // Convert the data to a JSON string
+          body: JSON.stringify(predictionData),
+        }).catch((err) => {
+          console.log("Server endpoint not available:", err);
         });
 
         thresholdTracking[className].triggered = true;
 
-        notyf.success(`${prediction[i].className} IS DETECTED!`);
+        // Format the class name for display
+        const displayName = prediction[i].className.toUpperCase();
+        notyf.success(`${displayName} DETECTED!`);
+
+        // Add visual feedback to the detected category
+        const categoryCard = bar.closest(".category-card");
+        if (categoryCard) {
+          categoryCard.style.animation = "none";
+          setTimeout(() => {
+            categoryCard.style.animation = "detectionPulse 0.5s ease-in-out";
+          }, 10);
+        }
       }
     } else {
-      // Reset if probability drops below 85%
+      // Reset if probability drops below threshold
       if (thresholdTracking[className]) {
         delete thresholdTracking[className];
       }
     }
   }
 }
+
+// Add detection pulse animation
+const style = document.createElement("style");
+style.textContent = `
+  @keyframes detectionPulse {
+    0%, 100% { 
+      transform: scale(1) translateY(0); 
+      box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
+    }
+    50% { 
+      transform: scale(1.05) translateY(-10px); 
+      box-shadow: 16px 16px 0px rgba(0, 0, 0, 0.4);
+    }
+  }
+`;
+document.head.appendChild(style);

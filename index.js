@@ -12,7 +12,7 @@ app.use(express.static(path.join(__dirname, "public/src")));
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
 
-const port = new SerialPort({ path: "COM6", baudRate: 9600 });
+const port = new SerialPort({ path: "COM4", baudRate: 9600 });
 const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
 
 port.on("open", () => {
