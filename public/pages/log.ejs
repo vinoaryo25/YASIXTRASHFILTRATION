@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../log/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Freckle+Face&family=Courier+Prime:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>System Logs - YASIX Smart Trash Filtration</title>
+  </head>
+  <body>
+    <div class="grain-overlay"></div>
+
+    <div class="container">
+      <!-- Header -->
+      <header class="log-header">
+        <div class="header-content">
+          <div class="logo-section">
+            <img src="img/LOGO.png" alt="YASIX Logo" class="logo-img" />
+            <div class="logo-text">
+              <h1>YASIX</h1>
+              <p>SMART TRASH FILTRATION</p>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <a href="/" class="btn-back">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              <span>BACK TO SCANNER</span>
+            </a>
+            <button class="btn-refresh" onclick="location.reload()">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"
+                />
+              </svg>
+              <span>REFRESH</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <div class="status-item">
+          <span class="status-indicator active"></span>
+          <span>SYSTEM ONLINE</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">TOTAL LOGS:</span>
+          <span class="status-value"><%= logs.length %></span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">LAST UPDATE:</span>
+          <span class="status-value" id="currentTime"></span>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main class="log-content">
+        <div class="log-panel">
+          <div class="panel-header">
+            <h2>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+              </svg>
+              SYSTEM LOGS
+            </h2>
+            <div class="panel-controls">
+              <button class="btn-control" onclick="scrollToBottom()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
+              </button>
+              <button class="btn-control" onclick="clearLogs()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="3 6 5 6 21 6" />
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="log-terminal" id="logTerminal">
+            <% if (logs.length === 0) { %>
+            <div class="log-empty">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4M12 8h.01" />
+              </svg>
+              <p>No logs available. System is waiting for activity...</p>
+            </div>
+            <% } else { %> <% logs.forEach((log, index) => { %> <% const
+            isArduino = log.includes('ARDUINO:'); %> <% const isPrediction =
+            log.includes('PREDICTED'); %> <% const isSystem =
+            log.includes('Server') || log.includes('serial port'); %>
+
+            <div
+              class="log-entry <%= isArduino ? 'log-arduino' : '' %> <%= isPrediction ? 'log-prediction' : '' %> <%= isSystem ? 'log-system' : '' %>"
+            >
+              <span class="log-index"
+                >[<%= String(index + 1).padStart(4, '0') %>]</span
+              >
+              <span class="log-timestamp"
+                ><%= new Date().toLocaleTimeString() %></span
+              >
+              <span class="log-message"><%= log %></span>
+            </div>
+            <% }) %> <% } %>
+          </div>
+        </div>
+
+        <!-- Statistics Panel -->
+        <aside class="stats-panel">
+          <div class="stat-card">
+            <h3>CLASSIFICATION STATS</h3>
+            <div class="stat-grid">
+              <div class="stat-item organik">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                <div class="stat-info">
+                  <span class="stat-label">ORGANIK</span>
+                  <span class="stat-value" id="organikCount">0</span>
+                </div>
+              </div>
+
+              <div class="stat-item anorganik">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <path d="M9 9l6 6M15 9l-6 6" />
+                </svg>
+                <div class="stat-info">
+                  <span class="stat-label">ANORGANIK</span>
+                  <span class="stat-value" id="anorganikCount">0</span>
+                </div>
+              </div>
+
+              <div class="stat-item b3">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <div class="stat-info">
+                  <span class="stat-label">B3</span>
+                  <span class="stat-value" id="b3Count">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <h3>SYSTEM INFO</h3>
+            <div class="info-list">
+              <div class="info-item">
+                <span class="info-label">PORT:</span>
+                <span class="info-value"><%= config.serialPort %></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">BAUD RATE:</span>
+                <span class="info-value"><%= config.baudRate %></span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">STATUS:</span>
+                <span class="info-value status-online">ONLINE</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">UPTIME:</span>
+                <span class="info-value" id="uptime">00:00:00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card eco-card">
+            <h3>🌱 ECO IMPACT</h3>
+            <p class="eco-text">
+              Every piece of waste sorted correctly helps protect our planet!
+            </p>
+            <div class="eco-stats">
+              <div class="eco-item">
+                <span class="eco-number"
+                  ><%= logs.filter(l => l.includes('PREDICTED')).length %></span
+                >
+                <span class="eco-label">Items Sorted</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- Footer -->
+      <footer class="log-footer">
+        <div class="footer-content">
+          <span>🌱 SMK YADIKA 6 JATIWARINGIN • HUT YADIKA 50 EXPO 2026</span>
+          <span class="footer-right"
+            >Powered by Teachable Machine AI • Real-time Monitoring</span
+          >
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Update current time
+      function updateTime() {
+        const now = new Date();
+        document.getElementById("currentTime").textContent =
+          now.toLocaleTimeString();
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
+
+      // Calculate statistics from logs
+      const logs = <%- JSON.stringify(logs) %>;
+      let organikCount = 0;
+      let anorganikCount = 0;
+      let b3Count = 0;
+
+      logs.forEach((log) => {
+        if (log.includes("PREDICTED organik")) organikCount++;
+        if (log.includes("PREDICTED anorganik")) anorganikCount++;
+        if (log.includes("PREDICTED b3")) b3Count++;
+      });
+
+      document.getElementById("organikCount").textContent = organikCount;
+      document.getElementById("anorganikCount").textContent = anorganikCount;
+      document.getElementById("b3Count").textContent = b3Count;
+
+      // Scroll to bottom
+      function scrollToBottom() {
+        const terminal = document.getElementById("logTerminal");
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+
+      // Auto-scroll to bottom on load
+      window.addEventListener("load", scrollToBottom);
+
+      // Clear logs (client-side visual only)
+      function clearLogs() {
+        if (confirm("This will refresh the page. The server logs remain unchanged. Continue?")) {
+          location.reload();
+        }
+      }
+
+      // Uptime counter
+      let uptimeSeconds = 0;
+      setInterval(() => {
+        uptimeSeconds++;
+        const hours = Math.floor(uptimeSeconds / 3600);
+        const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+        const seconds = uptimeSeconds % 60;
+        document.getElementById("uptime").textContent =
+          String(hours).padStart(2, "0") +
+          ":" +
+          String(minutes).padStart(2, "0") +
+          ":" +
+          String(seconds).padStart(2, "0");
+      }, 1000);
+
+      // Auto-refresh every 5 seconds (optional)
+      // setInterval(() => location.reload(), 5000);
+    </script>
+  </body>
+</html>
