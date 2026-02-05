@@ -1,4 +1,5 @@
-const URL = "https://teachablemachine.withgoogle.com/models/WzCktHjXW/";
+// const URL = "https://teachablemachine.withgoogle.com/models/WzCktHjXW/" FIRST;
+const URL = "https://teachablemachine.withgoogle.com/models/3l6awQHO6/"; // SECOND 3 FEB;
 
 let model, webcam, maxPredictions;
 const PREDICTION_TIME = 1500; // Milliseconds
@@ -10,7 +11,7 @@ const notyf = new Notyf({
   duration: 2500,
   position: {
     x: "center",
-    y: "top",
+    y: "bottom",
   },
 });
 
@@ -107,6 +108,10 @@ async function predict() {
           console.log("Server endpoint not available:", err);
         });
 
+        // await alert("SAMPAH MASUK ATAU BLOM?"); // PREVENT OVERLOAD
+
+        await konfirmasiSampah();
+
         thresholdTracking[className].triggered = true;
 
         // Format the class name for display
@@ -129,6 +134,25 @@ async function predict() {
       }
     }
   }
+}
+
+async function konfirmasiSampah() {
+  webcam.pause();
+  await Swal.fire({
+    title: "Silahkan masukan sampah ke tempatnya.",
+    text: "Pastikan sampah masuk dengan benar!",
+    icon: "warning",
+    timer: 5000,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: "Terbuang!",
+        text: "Terimakasih telah membuang sampah dengan benar.",
+        icon: "success",
+      });
+    }
+  });
+  webcam.play();
 }
 
 // Add detection pulse animation

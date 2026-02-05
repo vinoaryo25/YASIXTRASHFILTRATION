@@ -2,9 +2,10 @@ var express = require("express");
 var path = require("path");
 const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
+const ARDUINO_PORT = 8;
 
 const app = express();
-const PORT = 3000;
+const PORT = 3500;
 
 app.set("view engine", "ejs");
 app.set("views", "public/pages");
@@ -12,7 +13,7 @@ app.use(express.static(path.join(__dirname, "public/src")));
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true }));
 
-const port = new SerialPort({ path: "COM4", baudRate: 9600 });
+const port = new SerialPort({ path: "COM" + ARDUINO_PORT, baudRate: 9600 });
 const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
 
 port.on("open", () => {
@@ -26,7 +27,7 @@ parser.on("data", (data) => {
 port.on("error", (err) => {
   console.error("Serial port error:", err.message);
   if (err.message.includes("Access denied")) {
-    console.log("\n⚠️  COM6 is in use. Please:");
+    console.log(`\n⚠️  COM${ARDUINO_PORT} is in use. Please:`);
     console.log("  1. Close Arduino IDE Serial Monitor");
     console.log("  2. Check if another app is using the port");
     console.log("  3. Verify the correct port in Device Manager");

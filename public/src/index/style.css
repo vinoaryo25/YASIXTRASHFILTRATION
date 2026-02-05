@@ -412,7 +412,7 @@ body {
   padding: 30px;
   border: 5px solid var(--color-dark);
   box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -593,7 +593,237 @@ body {
 
 .notyf__toast--success {
   background: var(--color-primary) !important;
-  color: var(--color-accent) !important;
+  color: var(--color-text) !important;
+}
+
+/* Intro Loading Screen */
+.intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-dark) 0%, #1a1a1a 100%);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity 0.8s ease,
+    visibility 0.8s ease;
+}
+
+.intro-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro-content {
+  text-align: center;
+  max-width: 800px;
+  padding: 40px;
+  animation: introFadeIn 1s ease-out;
+}
+
+@keyframes introFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.intro-logo {
+  margin-bottom: 30px;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.intro-logo-img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(232, 213, 166, 0.5));
+}
+
+.intro-title {
+  font-family: "Freckle Face", cursive;
+  font-size: 4rem;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+  text-shadow: 4px 4px 0px rgba(90, 113, 71, 0.5);
+  letter-spacing: 5px;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  from {
+    text-shadow:
+      4px 4px 0px rgba(90, 113, 71, 0.5),
+      0 0 20px rgba(232, 213, 166, 0.3);
+  }
+  to {
+    text-shadow:
+      4px 4px 0px rgba(90, 113, 71, 0.5),
+      0 0 40px rgba(232, 213, 166, 0.6);
+  }
+}
+
+.intro-subtitle {
+  font-family: "Freckle Face", cursive;
+  font-size: 2rem;
+  color: var(--color-secondary);
+  margin-bottom: 40px;
+  letter-spacing: 3px;
+}
+
+.intro-divider {
+  width: 200px;
+  height: 3px;
+  background: var(--color-accent);
+  margin: 40px auto;
+  box-shadow: 0 0 10px var(--color-accent);
+  animation: dividerExpand 1.5s ease-out;
+}
+
+@keyframes dividerExpand {
+  from {
+    width: 0;
+  }
+  to {
+    width: 200px;
+  }
+}
+
+.intro-project {
+  font-family: "Courier Prime", monospace;
+  font-size: 1rem;
+  color: var(--color-accent);
+  letter-spacing: 5px;
+  margin-bottom: 15px;
+  opacity: 0.8;
+}
+
+.intro-project-name {
+  font-family: "Freckle Face", cursive;
+  font-size: 2.5rem;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+  text-shadow: 3px 3px 0px rgba(90, 113, 71, 0.5);
+}
+
+.intro-tech {
+  font-family: "Courier Prime", monospace;
+  font-size: 1rem;
+  color: var(--color-secondary);
+  margin-bottom: 50px;
+  letter-spacing: 2px;
+}
+
+.loading-container {
+  margin: 50px auto;
+  max-width: 500px;
+}
+
+.loading-bar {
+  width: 100%;
+  height: 40px;
+  background: var(--color-dark);
+  border: 4px solid var(--color-accent);
+  box-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(232, 213, 166, 0.3);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.loading-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    var(--color-secondary) 50%,
+    var(--color-accent) 100%
+  );
+  position: relative;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 20px rgba(139, 168, 114, 0.5);
+}
+
+.loading-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: loadingShimmer 1.5s infinite;
+}
+
+@keyframes loadingShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.loading-text {
+  font-family: "Courier Prime", monospace;
+  font-size: 1rem;
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+#loadingPercent {
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.intro-footer {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 2px solid var(--color-primary);
+}
+
+.intro-footer p {
+  font-family: "Freckle Face", cursive;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  letter-spacing: 3px;
+  animation: footerPulse 2s ease-in-out infinite;
+}
+
+@keyframes footerPulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* Responsive Design */
@@ -670,4 +900,54 @@ body {
     text-align: center;
     font-size: 0.8rem;
   }
+
+  /* Intro responsive */
+  .intro-content {
+    padding: 20px;
+  }
+
+  .intro-logo-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .intro-title {
+    font-size: 2.5rem;
+  }
+
+  .intro-subtitle {
+    font-size: 1.3rem;
+  }
+
+  .intro-project-name {
+    font-size: 1.8rem;
+  }
+
+  .intro-tech {
+    font-size: 0.9rem;
+  }
+
+  .loading-container {
+    max-width: 90%;
+  }
+
+  .loading-bar {
+    height: 30px;
+  }
+
+  .loading-text {
+    font-size: 0.85rem;
+  }
+
+  .intro-footer p {
+    font-size: 1rem;
+  }
+}
+
+/* SWEET ALERT */
+
+.swal2-modal {
+  width: 50%; /* Set a specific width */
+  min-height: 40%; /* Set minimum height */
+  font-size: 2rem; /* Adjusts the base font size, scaling content within */
 }

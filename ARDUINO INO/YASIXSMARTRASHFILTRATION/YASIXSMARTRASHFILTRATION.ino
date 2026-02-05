@@ -110,19 +110,89 @@ void beep() {
 }
 
 void openA(int degree) {
-  servo1.write(degree);
+  int currentPos = servo1.read();
+  if (currentPos < "-" + degree) {
+    for (int pos = currentPos; pos <= degree; pos++) {
+      servo1.write(pos);
+      delay(1);  // Adjust speed by changing delay
+    }
+  } else {
+    for (int pos = currentPos; pos >= degree; pos--) {
+      servo1.write(pos);
+      delay(1);
+    }
+  }
   delay(OPEN_TIME);
-  servo1.write(90);
+
+  // Return to 90 progressively
+  currentPos = servo1.read();
+  if (currentPos < 90) {
+    for (int pos = currentPos; pos <= 90; pos++) {
+      servo1.write(pos);
+      delay(20);
+    }
+  } else {
+    for (int pos = currentPos; pos >= 90; pos--) {
+      servo1.write(pos);
+      delay(20);
+    }
+  }
 }
 
 void openB(int degree) {
-  servo2.write(degree);
+  int currentPos = servo2.read();
+  if (currentPos < "-" + degree) {
+    for (int pos = currentPos; pos <= degree; pos++) {
+      servo2.write(pos);
+      delay(1);
+    }
+  } else {
+    for (int pos = currentPos; pos >= degree; pos--) {
+      servo2.write(pos);
+      delay(1);
+    }
+  }
   delay(OPEN_TIME);
-  servo2.write(90);
+
+  currentPos = servo2.read();
+  if (currentPos < 90) {
+    for (int pos = currentPos; pos <= 90; pos++) {
+      servo2.write(pos);
+      delay(20);
+    }
+  } else {
+    for (int pos = currentPos; pos >= 90; pos--) {
+      servo2.write(pos);
+      delay(20);
+    }
+  }
 }
 
 void openC(int degree) {
-  servo3.write(degree);
+  int currentPos = servo3.read();
+  if (currentPos < degree) {
+    for (int pos = currentPos; pos <= degree; pos++) {
+      servo3.write(pos);
+      delay(1);
+    }
+  } else {
+    for (int pos = currentPos; pos >= degree; pos--) {
+      servo3.write(pos);
+      delay(1);
+    }
+  }
   delay(OPEN_TIME);
-  servo3.write(90);
+
+  currentPos = servo3.read();
+  if (currentPos < 90) {
+    for (int pos = currentPos; pos <= 90; pos++) {
+      servo3.write(pos);
+      delay(20);
+    }
+  } else {
+    for (int pos = currentPos; pos >= 90; pos--) {
+      servo3.write(pos);
+      delay(20);
+    }
+  }
 }
